@@ -11,7 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Orbitron:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=2" />
+    <link rel="stylesheet" href="styles.css?v=4" />
   </head>
   <body style="background: #000000; color: #e8eef5">
     <canvas id="stars-canvas" class="stars-canvas" aria-hidden="true"></canvas>
@@ -50,6 +50,10 @@
           />
           <button type="submit" id="submit-btn">Get the clue</button>
         </form>
+        <p class="status status--saving" id="form-saving" role="status" aria-live="polite" hidden>
+          <span class="saving-spinner" aria-hidden="true"></span>
+          <span>Saving your email…</span>
+        </p>
         <p class="status status--error" id="form-error" role="alert" hidden></p>
         </section>
 
@@ -94,8 +98,8 @@
       title="Submission"
     ></iframe>
 
-    <script src="stars.js?v=3"></script>
-    <script src="config.js?v=3"></script>
-    <script src="app.js?v=3"></script>
+    <script src="stars.js?v=4"></script>
+    <script src="config.js?v=4"></script>
+    <script src="app.js?v=4"></script>
   </body>
 </html>

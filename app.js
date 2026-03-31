@@ -26,6 +26,7 @@
   var emailInput = document.getElementById("email");
   var submitBtn = document.getElementById("submit-btn");
   var formError = document.getElementById("form-error");
+  var formSaving = document.getElementById("form-saving");
   var panelForm = document.getElementById("panel-form");
   var panelReveal = document.getElementById("panel-reveal");
   var clueEl = document.getElementById("clue-text");
@@ -49,6 +50,22 @@
   function clearError() {
     formError.textContent = "";
     formError.hidden = true;
+  }
+
+  function setSavingState(active) {
+    if (formSaving) {
+      formSaving.hidden = !active;
+    }
+    if (form) {
+      form.setAttribute("aria-busy", active ? "true" : "false");
+    }
+    if (submitBtn) {
+      if (active) {
+        submitBtn.classList.add("submit-btn--loading");
+      } else {
+        submitBtn.classList.remove("submit-btn--loading");
+      }
+    }
   }
 
   function isValidEmail(value) {
@@ -271,6 +288,7 @@
       if (proxyFrame) {
         proxyFrame.removeEventListener("load", onLoad);
       }
+      setSavingState(false);
       submitBtn.disabled = false;
       submitBtn.textContent = prevLabel;
       revealSuccess();
@@ -328,7 +346,8 @@
 
     submitBtn.disabled = true;
     var prevLabel = submitBtn.textContent;
-    submitBtn.textContent = "…";
+    submitBtn.textContent = "Saving…";
+    setSavingState(true);
 
     submitEmailToSheet(email, prevLabel);
   });
