@@ -140,7 +140,7 @@ WEBAPP_URL="https://script.google.com/macros/s/.../exec" npm run test:sheets
 
 ## Customize
 
-- **Clue text:** edit `PLACEHOLDER_CLUE` in `app.js`.
+- **Clue / riddle:** edit the `RIDDLE_LINES` array in `app.js`, then bump `?v=` on scripts in `index.html` so visitors get the new file (cache bust).
 - **Matzah image:** replace `assets/matzah.png`. If the file came from a stock site (e.g. watermarked previews), use a version you are licensed to publish for a public site.
 - **Server logic:** edit [`apps-script/Code.gs`](apps-script/Code.gs), then `npm run gas:push`.
 
