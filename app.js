@@ -19,6 +19,7 @@
   var huntEl = document.getElementById("hunt-text");
   var shell = document.getElementById("shell");
   var intro = document.getElementById("intro");
+  var afikomanStack = document.getElementById("afikoman-stack");
   var proxyForm = document.getElementById("sheet-proxy-form");
   var proxyEmail = document.getElementById("sheet-proxy-email");
   var proxyFrame = document.getElementById("sheet-proxy-frame");
@@ -60,6 +61,11 @@
       return;
     }
 
+    var reduceMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var unlockMs = reduceMotion ? 200 : 780;
+
     if (shell) {
       shell.classList.add("shell--transitioning");
     }
@@ -68,11 +74,32 @@
       intro.classList.add("intro--dismissing");
     }
 
+    if (matzah) {
+      matzah.classList.add("matzah--dismissing");
+    }
+
     if (matzahStage) {
       matzahStage.classList.add("is-dismissing");
     }
 
+    /* Form sits behind matzah in the stack; show + animate in sync with matzah fading out */
+    panelForm.hidden = false;
+    panelForm.classList.add("panel--pre");
+
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        panelForm.classList.add("panel--enter-active");
+      });
+    });
+
     window.setTimeout(function () {
+      /* Keep panel absolutely centered (same transform) — only drop enter classes.
+         Reserve stack height so nothing jumps when matzah is removed from flow. */
+      panelForm.classList.remove("panel--pre", "panel--enter-active");
+      if (afikomanStack && panelForm.offsetHeight > 0) {
+        afikomanStack.style.minHeight = Math.ceil(panelForm.offsetHeight) + "px";
+        afikomanStack.classList.add("afikoman-stack--done");
+      }
       if (intro) {
         intro.hidden = true;
       }
@@ -83,14 +110,15 @@
         shell.classList.remove("shell--transitioning");
         shell.classList.add("shell--focus");
       }
-      panelForm.hidden = false;
-      panelForm.classList.add("panel--enter");
       emailInput.focus();
-    }, 620);
+    }, unlockMs);
   }
 
   function revealSuccess() {
     panelForm.hidden = true;
+    if (afikomanStack) {
+      afikomanStack.hidden = true;
+    }
     panelReveal.hidden = false;
 
     clueEl.textContent = PLACEHOLDER_CLUE;

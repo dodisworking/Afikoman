@@ -128,22 +128,47 @@ main {
 
 .intro {
   margin-bottom: 0.75rem;
-  transition: opacity 520ms ease, transform 520ms ease, filter 520ms ease;
+  transition:
+    opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .intro.intro--dismissing {
   opacity: 0;
   transform: translateY(-10px);
-  filter: blur(2px);
+}
+
+/* Matzah + form share one stack: form sits behind (z-index), crossfades on click */
+.afikoman-stack {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.afikoman-stack #panel-form.panel--stacked {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: min(100%, 24rem);
+  margin: 0;
+  transform: translate(-50%, -50%);
 }
 
 .matzah-stage {
-  margin: 0.75rem 0 1.5rem;
+  position: relative;
+  z-index: 2;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
-  transition: opacity 620ms ease, transform 620ms ease, filter 620ms ease;
+  transition:
+    opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .line {
@@ -178,7 +203,13 @@ main {
   height: auto;
   image-rendering: auto;
   animation: breathe 2.8s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
-  transition: opacity 520ms ease, transform 520ms ease;
+  transition:
+    opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.matzah.matzah--dismissing {
+  animation: none;
 }
 
 @keyframes breathe {
@@ -205,25 +236,29 @@ main {
 
 .matzah-stage.is-dismissing {
   opacity: 0;
-  transform: scale(0.9);
-  filter: blur(2px);
+  transform: scale(1.05);
   pointer-events: none;
 }
 
-.panel--enter {
-  animation: panelFadeIn 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+/* Form behind matzah: invisible, then rises into view as matzah fades (same duration) */
+.afikoman-stack #panel-form.panel--stacked.panel--pre {
+  opacity: 0;
+  transform: translate(-50%, -46%) scale(0.96);
+  pointer-events: none;
+  transition: none;
 }
 
-@keyframes panelFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.afikoman-stack #panel-form.panel--stacked.panel--pre.panel--enter-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+  transition:
+    opacity 780ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 780ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* After unlock: panel stays absolutely centered; min-height is set in JS on .afikoman-stack--done
+   so the stack does not collapse when matzah is hidden (avoids a snap). */
 
 .panel--glass {
   padding: 1.35rem 1.25rem 1.5rem;
@@ -363,5 +398,19 @@ main {
 
   .signup button {
     font-size: 0.78rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro,
+  .matzah-stage,
+  .matzah {
+    transition-duration: 200ms;
+  }
+
+  .afikoman-stack #panel-form.panel--stacked.panel--pre.panel--enter-active {
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
   }
 }

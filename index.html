@@ -23,21 +23,13 @@
         <p class="line">click the matzah for a clue</p>
       </header>
 
-      <div class="matzah-stage" id="matzah-stage">
-        <img
-          id="matzah"
-          class="matzah matzah--interactive"
-          src="assets/matzah.png"
-          alt="Matzah"
-          width="320"
-          height="320"
-          role="button"
-          tabindex="0"
-          aria-label="Open the email form"
-        />
-      </div>
-
-      <section class="panel panel--glass panel--locked" id="panel-form" aria-labelledby="form-heading" hidden>
+      <div class="afikoman-stack" id="afikoman-stack">
+        <section
+          class="panel panel--glass panel--locked panel--stacked"
+          id="panel-form"
+          aria-labelledby="form-heading"
+          hidden
+        >
         <h1 id="form-heading" class="sr-only">Join the email list</h1>
         <p class="blurb">
           To get the clue, submit your Ogilvy email to join the email list and
@@ -57,7 +49,22 @@
           <button type="submit" id="submit-btn">Get the clue</button>
         </form>
         <p class="status status--error" id="form-error" role="alert" hidden></p>
-      </section>
+        </section>
+
+        <div class="matzah-stage" id="matzah-stage">
+          <img
+            id="matzah"
+            class="matzah matzah--interactive"
+            src="assets/matzah.png"
+            alt="Matzah"
+            width="320"
+            height="320"
+            role="button"
+            tabindex="0"
+            aria-label="Open the email form"
+          />
+        </div>
+      </div>
 
       <section class="panel panel--glass panel--reveal" id="panel-reveal" hidden>
         <p class="clue" id="clue-text" aria-live="polite"></p>
