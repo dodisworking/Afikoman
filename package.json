@@ -1,0 +1,19 @@
+{
+  "name": "afikoman",
+  "private": true,
+  "devDependencies": {
+    "@google/clasp": "^2.4.2"
+  },
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "test:sheets": "node scripts/test-sheets.mjs",
+    "gas:login": "clasp login",
+    "gas:logout": "clasp logout",
+    "gas:pull": "cd apps-script && clasp pull",
+    "gas:push": "cd apps-script && clasp push",
+    "gas:open": "cd apps-script && clasp open",
+    "gas:deploy": "cd apps-script && clasp deploy",
+    "gas:status": "cd apps-script && clasp status",
+    "gas:logs": "cd apps-script && clasp logs"
+  }
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shalom Ogilvy — Passover</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,500;0,600;1,400&family=Orbitron:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body style="background: #000000; color: #e8eef5">
+    <canvas id="stars-canvas" class="stars-canvas" aria-hidden="true"></canvas>
+    <div class="stars stars--glow" aria-hidden="true"></div>
+    <div class="nebula" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="intro">
+        <p class="line line--glow">hello there happy passover Ogilvy</p>
+        <p class="line">click the matzah for a clue</p>
+      </header>
+
+      <div class="matzah-stage" id="matzah-stage">
+        <img
+          id="matzah"
+          class="matzah matzah--interactive"
+          src="assets/matzah.png"
+          alt="Matzah"
+          width="320"
+          height="320"
+          role="button"
+          tabindex="0"
+          aria-label="Open the email form"
+        />
+      </div>
+
+      <section class="panel panel--glass panel--locked" id="panel-form" aria-labelledby="form-heading" hidden>
+        <h1 id="form-heading" class="sr-only">Join the email list</h1>
+        <p class="blurb">
+          To get the clue, submit your Ogilvy email to join the email list and
+          learn first of any Shalom Ogilvy Events.
+        </p>
+        <form class="signup" id="signup-form" novalidate>
+          <label class="sr-only" for="email">Ogilvy email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="you@ogilvy.com"
+            required
+          />
+          <button type="submit" id="submit-btn">Get the clue</button>
+        </form>
+        <p class="status status--error" id="form-error" role="alert" hidden></p>
+      </section>
+
+      <section class="panel panel--glass panel--reveal" id="panel-reveal" hidden>
+        <p class="clue" id="clue-text" aria-live="polite"></p>
+        <p class="hunt" id="hunt-text" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="stars.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

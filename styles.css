@@ -1,0 +1,327 @@
+/* Deep space + canvas stars + sci-fi typography (Orbitron / Exo 2) */
+:root {
+  --bg: #000000;
+  --bg-deep: #000000;
+  --ink: #e8eef5;
+  --ink-muted: rgba(232, 238, 245, 0.78);
+  --accent: #eb0028;
+  --accent-dim: rgba(235, 0, 40, 0.35);
+  --accent-gold: #eb0028;
+  --panel-border: rgba(235, 0, 40, 0.32);
+  --panel-inner: rgba(8, 8, 10, 0.62);
+  --error: #ff8a8a;
+  --font-display: "Orbitron", system-ui, sans-serif;
+  --font-body: "Exo 2", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg-deep);
+  overflow-x: hidden;
+}
+
+main {
+  background: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Canvas = dense twinkling stars (behind everything) */
+.stars-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+/* Very subtle vignette only — avoid a visible “plate” behind the matzah */
+.stars.stars--glow {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 130% 90% at 50% 100%,
+    rgba(255, 255, 255, 0.03),
+    transparent 58%
+  );
+}
+
+.nebula {
+  display: none;
+}
+
+.shell {
+  position: relative;
+  z-index: 10;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: 2rem 1.35rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: transparent;
+}
+
+.intro {
+  margin-bottom: 0.75rem;
+}
+
+.line {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.7rem, 2.8vw, 0.85rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.line--glow {
+  color: var(--accent);
+  text-shadow:
+    0 0 20px var(--accent-dim),
+    0 0 40px rgba(235, 0, 40, 0.2);
+}
+
+.line:not(.line--glow) {
+  color: var(--ink-muted);
+  font-weight: 500;
+  font-size: clamp(0.6rem, 2.2vw, 0.72rem);
+}
+
+/* Solid black square behind the matzah (stars only outside this tile) */
+.matzah-stage {
+  margin: 0.75rem 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: min(300px, 78vw);
+  aspect-ratio: 1;
+  background: #000000;
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.matzah {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+  animation: breathe 6.2s cubic-bezier(0.42, 0, 0.58, 1) infinite alternate;
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(0.96);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+.panel {
+  width: 100%;
+}
+
+.matzah--interactive {
+  cursor: pointer;
+}
+
+.matzah--interactive:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+.matzah-stage.is-dismissing {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+.panel--enter {
+  animation: panelFadeIn 520ms ease both;
+}
+
+@keyframes panelFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel--glass {
+  padding: 1.35rem 1.25rem 1.5rem;
+  border-radius: 4px;
+  background: var(--panel-inner);
+  border: 1px solid var(--panel-border);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 12px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.blurb {
+  margin: 0 0 1.35rem;
+  font-size: clamp(0.875rem, 2.5vw, 0.95rem);
+  line-height: 1.65;
+  color: var(--ink-muted);
+  font-weight: 400;
+}
+
+.signup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  align-items: stretch;
+}
+
+.signup input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(235, 0, 40, 0.45);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ink);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.signup input::placeholder {
+  color: rgba(232, 238, 245, 0.35);
+}
+
+.signup input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.signup button {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  padding: 1rem 1.1rem;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: var(--bg-deep);
+  background: linear-gradient(165deg, #ff4a64 0%, #eb0028 42%, #9a001a 100%);
+  box-shadow:
+    0 0 24px rgba(235, 0, 40, 0.35),
+    0 4px 16px rgba(0, 0, 0, 0.35);
+  transition:
+    filter 0.2s ease,
+    transform 0.15s ease;
+}
+
+.signup button:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.signup button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.signup button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.status {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.status--error {
+  color: var(--error);
+  text-align: left;
+  max-width: 100%;
+  hyphens: auto;
+}
+
+.panel--reveal {
+  margin-top: 1rem;
+}
+
+.clue {
+  margin: 0 0 1.25rem;
+  font-size: clamp(0.9rem, 2.6vw, 1rem);
+  line-height: 1.6;
+  color: var(--accent-gold);
+  font-weight: 500;
+  min-height: 2.5em;
+}
+
+.hunt {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 3vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--ink);
+  min-height: 2.5em;
+  text-shadow: 0 0 20px rgba(235, 0, 40, 0.25);
+}
+
+@media (min-width: 480px) {
+  .shell {
+    max-width: 32rem;
+    padding-top: 2.5rem;
+  }
+
+  .signup button {
+    font-size: 0.78rem;
+  }
+}
