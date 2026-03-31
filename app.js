@@ -60,11 +60,12 @@
       return;
     }
 
-    if (intro) {
-      intro.hidden = true;
-    }
     if (shell) {
-      shell.classList.add("shell--focus");
+      shell.classList.add("shell--transitioning");
+    }
+
+    if (intro) {
+      intro.classList.add("intro--dismissing");
     }
 
     if (matzahStage) {
@@ -72,13 +73,20 @@
     }
 
     window.setTimeout(function () {
+      if (intro) {
+        intro.hidden = true;
+      }
       if (matzahStage) {
         matzahStage.hidden = true;
+      }
+      if (shell) {
+        shell.classList.remove("shell--transitioning");
+        shell.classList.add("shell--focus");
       }
       panelForm.hidden = false;
       panelForm.classList.add("panel--enter");
       emailInput.focus();
-    }, 520);
+    }, 620);
   }
 
   function revealSuccess() {

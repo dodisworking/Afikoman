@@ -120,8 +120,30 @@ main {
   margin-top: 0;
 }
 
+
+.shell--transitioning {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .intro {
   margin-bottom: 0.75rem;
+  transition: opacity 520ms ease, transform 520ms ease, filter 520ms ease;
+}
+
+.intro.intro--dismissing {
+  opacity: 0;
+  transform: translateY(-10px);
+  filter: blur(2px);
+}
+
+.matzah-stage {
+  margin: 0.75rem 0 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  transition: opacity 620ms ease, transform 620ms ease, filter 620ms ease;
 }
 
 .line {
@@ -148,14 +170,6 @@ main {
 }
 
 /* No box behind matzah — PNG alpha shows the starfield through transparent areas */
-.matzah-stage {
-  margin: 0.75rem 0 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-  transition: opacity 520ms ease, transform 520ms ease;
-}
 
 .matzah {
   display: block;
@@ -192,11 +206,12 @@ main {
 .matzah-stage.is-dismissing {
   opacity: 0;
   transform: scale(0.9);
+  filter: blur(2px);
   pointer-events: none;
 }
 
 .panel--enter {
-  animation: panelFadeIn 520ms ease both;
+  animation: panelFadeIn 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes panelFadeIn {
