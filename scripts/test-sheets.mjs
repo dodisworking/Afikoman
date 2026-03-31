@@ -34,7 +34,7 @@ const res = await fetch(url, {
   redirect: "follow",
   credentials: "omit",
   headers: {
-    "Content-Type": "text/plain;charset=utf-8",
+    "Content-Type": "text/plain",
   },
   body,
 });

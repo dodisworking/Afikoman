@@ -1,15 +1,16 @@
 /**
- * CONNECT THE FORM (one-time):
+ * CONNECT THE FORM:
  *
- * 1. Open your Google Sheet → Extensions → Apps Script.
- * 2. Make sure the script has the doPost code (see apps-script/Code.gs or README).
- * 3. Click Deploy → New deployment → gear → Web app.
- *    - Execute as: Me
- *    - Who has access: Anyone
- * 4. Deploy, then copy the Web app URL (ends with .../exec).
- * 5. Paste it between the quotes below, save this file, refresh the site.
+ * This URL is your **Web app deployment** from Apps Script (Deploy → Web app).
+ * It does **not** get pasted inside the Sheet UI — it belongs here so the website
+ * can POST emails to your script. The script is already linked to the Sheet via
+ * Extensions → Apps Script.
  *
- * Example:
- *   window.SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycb.../exec";
+ * Org / Workspace URLs look like:
+ *   https://script.google.com/a/macros/DOMAIN/s/.../exec
+ *
+ * For a **public** GitHub Pages site, deployment must allow anonymous access
+ * (“Anyone” / anyone with the link), or visitors will hit a login page (Okta).
  */
-window.SHEETS_ENDPOINT = "";
+window.SHEETS_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbwhC6tLKHrDjeXQnhSlWURHERRLirEMVH2i_ymCPoce7lqer_bgbgrieAQYIhw6jVe12A/exec";

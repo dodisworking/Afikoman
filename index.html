@@ -17,8 +17,8 @@
     <div class="stars stars--glow" aria-hidden="true"></div>
     <div class="nebula" aria-hidden="true"></div>
 
-    <main class="shell">
-      <header class="intro">
+    <main class="shell" id="shell">
+      <header class="intro" id="intro">
         <p class="line line--glow">hello there happy passover Ogilvy</p>
         <p class="line">click the matzah for a clue</p>
       </header>
@@ -64,6 +64,25 @@
         <p class="hunt" id="hunt-text" aria-live="polite"></p>
       </section>
     </main>
+
+    <!-- Google Apps Script accepts POST without CORS issues when using form+iframe (not fetch). -->
+    <form
+      id="sheet-proxy-form"
+      method="post"
+      action=""
+      target="sheet-proxy-frame"
+      enctype="application/x-www-form-urlencoded"
+      class="sheet-proxy"
+      aria-hidden="true"
+    >
+      <input type="hidden" name="email" id="sheet-proxy-email" value="" />
+    </form>
+    <iframe
+      name="sheet-proxy-frame"
+      id="sheet-proxy-frame"
+      class="sheet-proxy-frame"
+      title="Submission"
+    ></iframe>
 
     <script src="stars.js"></script>
     <script src="config.js"></script>

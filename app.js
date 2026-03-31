@@ -17,6 +17,11 @@
   var panelReveal = document.getElementById("panel-reveal");
   var clueEl = document.getElementById("clue-text");
   var huntEl = document.getElementById("hunt-text");
+  var shell = document.getElementById("shell");
+  var intro = document.getElementById("intro");
+  var proxyForm = document.getElementById("sheet-proxy-form");
+  var proxyEmail = document.getElementById("sheet-proxy-email");
+  var proxyFrame = document.getElementById("sheet-proxy-frame");
 
   var endpoint =
     typeof window.SHEETS_ENDPOINT === "string" ? window.SHEETS_ENDPOINT.trim() : "";
@@ -55,6 +60,13 @@
       return;
     }
 
+    if (intro) {
+      intro.hidden = true;
+    }
+    if (shell) {
+      shell.classList.add("shell--focus");
+    }
+
     if (matzahStage) {
       matzahStage.classList.add("is-dismissing");
     }
@@ -77,6 +89,45 @@
 
     huntEl.textContent = "";
     typewriter(huntEl, HUNT_LINE, 120, null);
+  }
+
+  /**
+   * POST via hidden form + iframe (application/x-www-form-urlencoded).
+   * Avoids browser CORS blocking fetch() to script.google.com from github.io.
+   */
+  function submitEmailToSheet(email, prevLabel) {
+    var finished = false;
+
+    function cleanup() {
+      if (finished) {
+        return;
+      }
+      finished = true;
+      if (proxyFrame) {
+        proxyFrame.removeEventListener("load", onLoad);
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = prevLabel;
+      revealSuccess();
+    }
+
+    function onLoad() {
+      cleanup();
+    }
+
+    if (proxyFrame) {
+      proxyFrame.addEventListener("load", onLoad);
+    }
+
+    proxyForm.action = endpoint;
+    proxyEmail.value = email;
+    proxyForm.submit();
+
+    window.setTimeout(function () {
+      if (!finished) {
+        cleanup();
+      }
+    }, 8000);
   }
 
   if (matzah) {
@@ -114,49 +165,6 @@
     var prevLabel = submitBtn.textContent;
     submitBtn.textContent = "…";
 
-    fetch(endpoint, {
-      method: "POST",
-      redirect: "follow",
-      credentials: "omit",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-      },
-      body: JSON.stringify({ email: email }),
-    })
-      .then(function (res) {
-        return res.text().then(function (text) {
-          var data = null;
-          try {
-            data = text ? JSON.parse(text) : null;
-          } catch (err) {
-            data = null;
-          }
-          return { httpOk: res.ok, data: data };
-        });
-      })
-      .then(function (result) {
-        if (!result.httpOk) {
-          throw new Error("Something went wrong. Try again.");
-        }
-        if (!result.data || result.data.ok !== true) {
-          var msg =
-            result.data && result.data.error
-              ? String(result.data.error)
-              : "Could not save.";
-          throw new Error(msg);
-        }
-        revealSuccess();
-      })
-      .catch(function (err) {
-        var msg =
-          err && err.message
-            ? err.message
-            : "Network error — check connection or Apps Script deploy.";
-        showError(msg);
-      })
-      .finally(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = prevLabel;
-      });
+    submitEmailToSheet(email, prevLabel);
   });
 })();
