@@ -132,6 +132,13 @@ main {
   transform: translateY(-10px);
 }
 
+/* Reserves the intro’s layout space after it is hidden so the matzah/form block does not jump up */
+.intro-layout-spacer {
+  width: 100%;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
 /* Outer wrapper; matzah-slot is the positioning context so the form stays behind the matzah */
 .afikoman-stack {
   width: 100%;
@@ -370,8 +377,47 @@ main {
   min-height: 2.5em;
 }
 
+.clue--riddle {
+  min-height: 0;
+  margin: 0 0 1.75rem;
+  padding: 0.25rem 0 0.5rem;
+  text-align: left;
+  max-width: 26rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.riddle-line {
+  margin: 0 0 0.55rem;
+  font-size: clamp(0.86rem, 2.45vw, 1.02rem);
+  line-height: 1.68;
+  color: rgba(232, 238, 245, 0.92);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+}
+
+.riddle-line:nth-child(2n) {
+  margin-bottom: 0.95rem;
+}
+
+.riddle-line:last-child {
+  margin-bottom: 0;
+}
+
+.riddle-line--spark {
+  color: var(--accent);
+  font-weight: 600;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 18px var(--accent-dim),
+    0 0 36px rgba(235, 0, 40, 0.15);
+}
+
 .hunt {
-  margin: 0;
+  margin: 0.75rem 0 0;
   font-family: var(--font-display);
   font-size: clamp(0.95rem, 3vw, 1.1rem);
   font-weight: 700;

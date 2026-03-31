@@ -1,11 +1,24 @@
 (function () {
   "use strict";
 
-  /** Replace with your real clue when ready. */
-  var PLACEHOLDER_CLUE =
-    "The real clue goes here — edit PLACEHOLDER_CLUE in app.js when you have it.";
-
   var HUNT_LINE = "happy hunting";
+
+  var RIDDLE_LINES = [
+    "Two brothers, with Jewish chutzpah behind the scene,",
+    "Helped shape Disney's songs in ways rarely seen.",
+    "From shtetl to studio, they made their way up,",
+    "Turning small sparks of magic into something grown-up.",
+    "From jungle to rooftops, their melodies would flow,",
+    "Writing the songs that the whole world would know.",
+    "They gave us a word that's absurdly ferocious,",
+    "A tongue-twisting triumph… supercalifragilisticexpialidocious.",
+    "\"When you've got nothing to say…\" they showed us the way,",
+    "One word could carry the whole thing to play.",
+    "So follow that melody, go where it flows,",
+    "There's something hidden there… more than you know.",
+    "And when you find it, no need to be precocious—",
+    "You'll be feeling supercalifragilisticexpialidocious.",
+  ];
 
   var form = document.getElementById("signup-form");
   var matzah = document.getElementById("matzah");
@@ -57,6 +70,95 @@
     tick();
   }
 
+  function typewriterRhythm(el, line, done) {
+    el.textContent = "";
+    var i = 0;
+    var big = "supercalifragilisticexpialidocious";
+
+    function delayAt(idx) {
+      var c = line.charAt(idx);
+      var base = 30;
+      if (c === "…") {
+        return base + 140;
+      }
+      if (",;:".indexOf(c) >= 0) {
+        return base + 85;
+      }
+      if (".!?".indexOf(c) >= 0) {
+        return base + 210;
+      }
+      if (c === "—") {
+        return base + 130;
+      }
+      if (c === "\"") {
+        return base + 55;
+      }
+      if (c === " ") {
+        return base + 12;
+      }
+      var start = line.indexOf(big);
+      if (start >= 0 && idx >= start && idx < start + big.length) {
+        return base + 38;
+      }
+      return base;
+    }
+
+    function step() {
+      if (i >= line.length) {
+        window.setTimeout(function () {
+          if (typeof done === "function") {
+            done();
+          }
+        }, 360);
+        return;
+      }
+      el.textContent += line.charAt(i);
+      var d = delayAt(i);
+      i += 1;
+      window.setTimeout(step, d);
+    }
+    step();
+  }
+
+  function revealRiddleLine(lineIndex) {
+    if (lineIndex >= RIDDLE_LINES.length) {
+      window.setTimeout(function () {
+        huntEl.textContent = "";
+        typewriter(huntEl, HUNT_LINE, 95, null);
+      }, 520);
+      return;
+    }
+
+    var line = RIDDLE_LINES[lineIndex];
+    var p = document.createElement("p");
+    p.className = "riddle-line";
+    if (line.indexOf("supercalifragilisticexpialidocious") >= 0) {
+      p.classList.add("riddle-line--spark");
+    }
+    clueEl.appendChild(p);
+
+    typewriterRhythm(p, line, function () {
+      window.setTimeout(function () {
+        revealRiddleLine(lineIndex + 1);
+      }, 280);
+    });
+  }
+
+  function revealRiddleInstant() {
+    clueEl.textContent = "";
+    RIDDLE_LINES.forEach(function (line) {
+      var p = document.createElement("p");
+      p.className = "riddle-line";
+      if (line.indexOf("supercalifragilisticexpialidocious") >= 0) {
+        p.classList.add("riddle-line--spark");
+      }
+      p.textContent = line;
+      clueEl.appendChild(p);
+    });
+    huntEl.textContent = "";
+    typewriter(huntEl, HUNT_LINE, 70, null);
+  }
+
   function unlockForm() {
     if (!panelForm.hidden) {
       return;
@@ -90,14 +192,33 @@
     });
 
     window.setTimeout(function () {
-      /* Lock slot to matzah height so the panel stays centered where the matzah was
-         (no vertical snap when the form is taller than the matzah). */
+      /* Lock slot to matzah height so the panel stays centered where the matzah was. */
       panelForm.classList.remove("panel--pre", "panel--enter-active");
       if (matzahSlot && matzahStage && matzahStage.offsetHeight > 0) {
         matzahSlot.style.minHeight = Math.ceil(matzahStage.offsetHeight) + "px";
         matzahSlot.classList.add("matzah-slot--done");
       }
-      if (intro) {
+      /* Hiding the intro removes its layout height and pulls the stack upward — preserve
+         the same vertical offset with a spacer so the email panel stays put. */
+      if (intro && afikomanStack && shell) {
+        var spacerH = afikomanStack.offsetTop - intro.offsetTop;
+        if (spacerH <= 0 && intro.offsetHeight > 0) {
+          spacerH = intro.offsetHeight;
+        }
+        if (spacerH > 0) {
+          var existing = document.getElementById("intro-layout-spacer");
+          if (existing) {
+            existing.remove();
+          }
+          var spacer = document.createElement("div");
+          spacer.id = "intro-layout-spacer";
+          spacer.className = "intro-layout-spacer";
+          spacer.setAttribute("aria-hidden", "true");
+          spacer.style.height = Math.ceil(spacerH) + "px";
+          shell.insertBefore(spacer, afikomanStack);
+        }
+        intro.hidden = true;
+      } else if (intro) {
         intro.hidden = true;
       }
       if (matzahStage) {
@@ -112,15 +233,27 @@
     if (afikomanStack) {
       afikomanStack.hidden = true;
     }
+    var layoutSpacer = document.getElementById("intro-layout-spacer");
+    if (layoutSpacer) {
+      layoutSpacer.remove();
+    }
     if (shell) {
       shell.classList.add("shell--focus");
     }
     panelReveal.hidden = false;
 
-    clueEl.textContent = PLACEHOLDER_CLUE;
-
+    clueEl.textContent = "";
     huntEl.textContent = "";
-    typewriter(huntEl, HUNT_LINE, 120, null);
+
+    var reduceMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion) {
+      revealRiddleInstant();
+    } else {
+      revealRiddleLine(0);
+    }
   }
 
   /**
