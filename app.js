@@ -20,6 +20,7 @@
   var shell = document.getElementById("shell");
   var intro = document.getElementById("intro");
   var afikomanStack = document.getElementById("afikoman-stack");
+  var matzahSlot = document.getElementById("matzah-slot");
   var proxyForm = document.getElementById("sheet-proxy-form");
   var proxyEmail = document.getElementById("sheet-proxy-email");
   var proxyFrame = document.getElementById("sheet-proxy-frame");
@@ -66,10 +67,6 @@
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     var unlockMs = reduceMotion ? 200 : 780;
 
-    if (shell) {
-      shell.classList.add("shell--transitioning");
-    }
-
     if (intro) {
       intro.classList.add("intro--dismissing");
     }
@@ -93,22 +90,18 @@
     });
 
     window.setTimeout(function () {
-      /* Keep panel absolutely centered (same transform) — only drop enter classes.
-         Reserve stack height so nothing jumps when matzah is removed from flow. */
+      /* Lock slot to matzah height so the panel stays centered where the matzah was
+         (no vertical snap when the form is taller than the matzah). */
       panelForm.classList.remove("panel--pre", "panel--enter-active");
-      if (afikomanStack && panelForm.offsetHeight > 0) {
-        afikomanStack.style.minHeight = Math.ceil(panelForm.offsetHeight) + "px";
-        afikomanStack.classList.add("afikoman-stack--done");
+      if (matzahSlot && matzahStage && matzahStage.offsetHeight > 0) {
+        matzahSlot.style.minHeight = Math.ceil(matzahStage.offsetHeight) + "px";
+        matzahSlot.classList.add("matzah-slot--done");
       }
       if (intro) {
         intro.hidden = true;
       }
       if (matzahStage) {
         matzahStage.hidden = true;
-      }
-      if (shell) {
-        shell.classList.remove("shell--transitioning");
-        shell.classList.add("shell--focus");
       }
       emailInput.focus();
     }, unlockMs);
@@ -118,6 +111,9 @@
     panelForm.hidden = true;
     if (afikomanStack) {
       afikomanStack.hidden = true;
+    }
+    if (shell) {
+      shell.classList.add("shell--focus");
     }
     panelReveal.hidden = false;
 
