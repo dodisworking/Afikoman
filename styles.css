@@ -354,7 +354,12 @@ main {
   letter-spacing: 0.12em;
 }
 
-.status--saving {
+/* Author `display: flex` must not beat the HTML `hidden` attribute (otherwise saving shows by default). */
+.status--saving[hidden] {
+  display: none !important;
+}
+
+.status--saving:not([hidden]) {
   display: flex;
   align-items: center;
   justify-content: center;
