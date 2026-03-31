@@ -298,12 +298,22 @@
       cleanup();
     }
 
+    if (!proxyForm) {
+      submitBtn.disabled = false;
+      showError("Something went wrong. Refresh and try again.");
+      return;
+    }
+
     if (proxyFrame) {
       proxyFrame.addEventListener("load", onLoad);
     }
 
     proxyForm.action = endpoint;
     proxyEmail.value = email;
+
+    /* Only show “Saving your email…” at the moment we actually POST (not on mere click). */
+    setSavingState(true);
+
     proxyForm.submit();
 
     window.setTimeout(function () {
@@ -346,8 +356,6 @@
 
     submitBtn.disabled = true;
     var prevLabel = submitBtn.textContent;
-    submitBtn.textContent = "Saving…";
-    setSavingState(true);
 
     submitEmailToSheet(email, prevLabel);
   });
