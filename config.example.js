@@ -9,5 +9,8 @@ window.SHEETS_ENDPOINT = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/
 /** Optional: seconds after vocals start when the repeated chorus begins (default 60 = 1:00). */
 // window.KITE_LYRIC_RESUME_SEC = 60;
 
-/** Optional: seconds after the repeated “Oh, let’s go fly a kite!” before the verse (default 9). */
-// window.KITE_LYRIC_POST_CHORUS2_GAP = 9;
+/** Optional: when Bert’s verse starts, seconds after vocals (default 87 ≈ 1:27). */
+// window.KITE_LYRIC_VERSE_START_SEC = 87;
+
+/** Optional: multiply gaps for Bert → finale (default 0.93; lower = snappier next lines). */
+// window.KITE_LYRIC_BERT_TAIL_GAP_SCALE = 0.93;

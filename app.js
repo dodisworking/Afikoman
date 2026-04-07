@@ -40,30 +40,38 @@
       : 28;
 
   /**
-   * Lyric lines + offsets (seconds after KITE_SONG_START_SEC) tuned to the film timing.
-   * Tweak offsets in this file if your MP4 lead-in differs.
+   * Film transcript wording (Mary Poppins). Spoken Mrs. Banks / Constable lines omitted.
+   * Timing: seconds after KITE_SONG_START_SEC (singing begins ~5s into the MP4).
    */
   var KITE_VIDEO_LINES = [
     "With tuppence for paper and strings",
     "You can have your own set of wings",
     "With your feet on the ground",
-    "You're a bird in a flight",
+    "You're a bird in flight",
     "With your fist holding tight",
     "To the string of your kite",
-    "Oh, oh, oh!",
+    "Oh, oh, oh",
+    "Let's go fly a kite",
+    "Up to the highest height!",
+    "Let's go fly a kite",
+    "And send it soaring",
+    "Up through the atmosphere",
+    "Up where the air is clear",
+    "Oh, let's go fly a kite!",
     "Let's go fly a kite",
     "Up to the highest height!",
     "Let's go fly a kite and send it soaring",
     "Up through the atmosphere",
     "Up where the air is clear",
     "Oh, let's go fly a kite!",
-    "When you send it flyin' up there",
+    "When you send it flying up there",
     "All at once you're lighter than air",
     "You can dance on the breeze",
-    "Over 'ouses and trees",
-    "With your first 'olding tight",
+    "Over houses and trees",
+    "With your fist holding tight",
     "To the string of your kite",
-    "Oh, oh, oh!",
+    "Oh, oh, oh",
+    "Now!",
     "Let's go fly a kite",
     "Up to the highest height!",
     "Let's go fly a kite and send it soaring",
@@ -73,71 +81,74 @@
   ];
 
   /**
-   * Ordered cues: seconds after KITE_SONG_START_SEC → which lyric line to show.
-   * ~0–52s: verse + first chorus (lines 0–12), then instrumental until second chorus.
-   * 1:00: second chorus (lines 7–12) using same line spacing as the first chorus.
-   * After that: shorter pause than the first bridge, then verse + finale (13–25) with original relative spacing.
+   * Banks Family chorus after dialogue (~1:00). Bert verse pulled earlier vs old 1:32 map; tail gaps scaled.
+   * Override in config.js if your rip differs.
    */
   var KITE_LYRIC_RESUME_SEC =
     typeof window.KITE_LYRIC_RESUME_SEC === "number" && !isNaN(window.KITE_LYRIC_RESUME_SEC)
       ? window.KITE_LYRIC_RESUME_SEC
       : 60;
 
-  /** Pause after the *second* “Oh, let’s go fly a kite!” before the verse (first bridge was 11s; default a bit tighter). */
-  var KITE_LYRIC_POST_CHORUS2_GAP =
-    typeof window.KITE_LYRIC_POST_CHORUS2_GAP === "number" && !isNaN(window.KITE_LYRIC_POST_CHORUS2_GAP)
-      ? window.KITE_LYRIC_POST_CHORUS2_GAP
-      : 9;
+  /** Seconds after vocal start when Bert’s verse begins (default ~1:27; tune if your rip leads the old 1:32 map). */
+  var KITE_LYRIC_VERSE_START_SEC =
+    typeof window.KITE_LYRIC_VERSE_START_SEC === "number" && !isNaN(window.KITE_LYRIC_VERSE_START_SEC)
+      ? window.KITE_LYRIC_VERSE_START_SEC
+      : 87;
+
+  /** Scale Bert→finale inter-line gaps (<1 = slightly earlier next lines, reduces drift). */
+  var KITE_LYRIC_BERT_TAIL_GAP_SCALE =
+    typeof window.KITE_LYRIC_BERT_TAIL_GAP_SCALE === "number" &&
+    !isNaN(window.KITE_LYRIC_BERT_TAIL_GAP_SCALE) &&
+    window.KITE_LYRIC_BERT_TAIL_GAP_SCALE > 0
+      ? window.KITE_LYRIC_BERT_TAIL_GAP_SCALE
+      : 0.93;
 
   var KITE_LYRIC_CUES = (function () {
     var resume = KITE_LYRIC_RESUME_SEC;
-    var gapAfterChorus2 = KITE_LYRIC_POST_CHORUS2_GAP;
-    var first = [
-      { line: 0, t: 0 },
-      { line: 1, t: 2.617 },
-      { line: 2, t: 6.107 },
-      { line: 3, t: 8.442 },
-      { line: 4, t: 11.612 },
-      { line: 5, t: 15.366 },
-      { line: 6, t: 17.451 },
-      { line: 7, t: 20.288 },
-      { line: 8, t: 23.958 },
-      { line: 9, t: 27.461 },
-      { line: 10, t: 35.597 },
-      { line: 11, t: 38.055 },
-      { line: 12, t: 41.602 },
+    var tBert = KITE_LYRIC_VERSE_START_SEC;
+    /* Opening verse + chorus: aligned to original film subtitle pacing (vocal t=0 at MP4+5s). */
+    var t0 = 0;
+    var open = [
+      { line: 0, t: t0 + 0 },
+      { line: 1, t: t0 + 2.617 },
+      { line: 2, t: t0 + 6.107 },
+      { line: 3, t: t0 + 8.442 },
+      { line: 4, t: t0 + 11.612 },
+      { line: 5, t: t0 + 15.366 },
+      { line: 6, t: t0 + 17.451 },
+      { line: 7, t: t0 + 20.288 },
+      { line: 8, t: t0 + 23.958 },
+      { line: 9, t: t0 + 27.461 },
+      { line: 10, t: t0 + 30.2 },
+      { line: 11, t: t0 + 35.597 },
+      { line: 12, t: t0 + 38.055 },
+      { line: 13, t: t0 + 41.602 },
     ];
-    var d78 = 23.958 - 20.288;
-    var d89 = 27.461 - 23.958;
-    var d910 = 35.597 - 27.461;
-    var d1011 = 38.055 - 35.597;
-    var d1112 = 41.602 - 38.055;
-    var chorus2 = [
-      { line: 7, t: resume },
-      { line: 8, t: resume + d78 },
-      { line: 9, t: resume + d78 + d89 },
-      { line: 10, t: resume + d78 + d89 + d910 },
-      { line: 11, t: resume + d78 + d89 + d910 + d1011 },
-      { line: 12, t: resume + d78 + d89 + d910 + d1011 + d1112 },
+    /* Banks Family chorus: same spacing as George’s chorus (lines 7–13), starting at resume. */
+    var ch0 = 20.288;
+    var banks = [
+      { line: 14, t: resume },
+      { line: 15, t: resume + (23.958 - ch0) },
+      { line: 16, t: resume + (27.461 - ch0) },
+      { line: 17, t: resume + (35.597 - ch0) },
+      { line: 18, t: resume + (38.055 - ch0) },
+      { line: 19, t: resume + (41.602 - ch0) },
     ];
-    var t12 = chorus2[5].t;
-    var t13 = t12 + gapAfterChorus2;
-    var tail = [
-      { line: 13, t: t13 },
-      { line: 14, t: t13 + (55.619 - 52.602) },
-      { line: 15, t: t13 + (59.109 - 52.602) },
-      { line: 16, t: t13 + (61.444 - 52.602) },
-      { line: 17, t: t13 + (64.614 - 52.602) },
-      { line: 18, t: t13 + (68.368 - 52.602) },
-      { line: 19, t: t13 + (70.451 - 52.602) },
-      { line: 20, t: t13 + (73.288 - 52.602) },
-      { line: 21, t: t13 + (76.958 - 52.602) },
-      { line: 22, t: t13 + (80.461 - 52.602) },
-      { line: 23, t: t13 + (88.597 - 52.602) },
-      { line: 24, t: t13 + (91.055 - 52.602) },
-      { line: 25, t: t13 + (94.604 - 52.602) },
+    /* Bert → finale: anchor line 20 at tBert; following gaps from film map × scale so lines don’t lag. */
+    var filmTailT = [
+      52.602, 55.619, 59.109, 61.444, 64.614, 68.368, 70.451, 71.35, 73.288, 76.958, 80.461, 88.597, 91.055,
+      94.604,
     ];
-    return first.concat(chorus2, tail);
+    var gapScale = KITE_LYRIC_BERT_TAIL_GAP_SCALE;
+    var tail = [];
+    var tCur = tBert;
+    var ti;
+    tail.push({ line: 20, t: tBert });
+    for (ti = 1; ti < filmTailT.length; ti++) {
+      tCur += (filmTailT[ti] - filmTailT[ti - 1]) * gapScale;
+      tail.push({ line: 20 + ti, t: tCur });
+    }
+    return open.concat(banks, tail);
   })();
 
   var KITE_LAST_CUE_INDEX = KITE_LYRIC_CUES.length - 1;
@@ -240,8 +251,13 @@
     karaokeFinaleActive = false;
     if (karaokeVideoWrap) {
       karaokeVideoWrap.classList.remove("karaoke-video-wrap--fadeout");
+      karaokeVideoWrap.removeAttribute("hidden");
+    }
+    if (karaokeLyrics) {
+      karaokeLyrics.removeAttribute("hidden");
     }
     if (karaokeOutro) {
+      karaokeOutro.classList.remove("karaoke-outro--solo");
       karaokeOutro.hidden = true;
       var kids = karaokeOutro.querySelectorAll(".karaoke-outro__line");
       var ki;
@@ -332,45 +348,37 @@
       lyricRaf = 0;
     }
 
-    if (karaokeVideoWrap) {
-      karaokeVideoWrap.classList.add("karaoke-video-wrap--fadeout");
+    if (kiteVideo) {
+      try {
+        kiteVideo.pause();
+      } catch (err) {
+        /* ignore */
+      }
     }
 
-    var fadeDone = window.setTimeout(function () {
-      var ix = outroTimeouts.indexOf(fadeDone);
-      if (ix >= 0) {
-        outroTimeouts.splice(ix, 1);
-      }
-      if (kiteVideo) {
-        try {
-          kiteVideo.pause();
-        } catch (err) {
-          /* ignore */
-        }
-      }
-    }, 1280);
-    outroTimeouts.push(fadeDone);
+    if (karaokeVideoWrap) {
+      karaokeVideoWrap.classList.remove("karaoke-video-wrap--fadeout");
+      karaokeVideoWrap.setAttribute("hidden", "");
+    }
+    if (karaokeLyrics) {
+      karaokeLyrics.textContent = "";
+      karaokeLyrics.setAttribute("hidden", "");
+    }
 
-    var showOutro = window.setTimeout(function () {
-      var ix2 = outroTimeouts.indexOf(showOutro);
-      if (ix2 >= 0) {
-        outroTimeouts.splice(ix2, 1);
-      }
-      if (!karaokeOutro) {
-        return;
-      }
-      karaokeOutro.hidden = false;
-      try {
-        karaokeOutro.scrollIntoView({
-          block: "nearest",
-          behavior: prefersReducedMotionOutro() ? "auto" : "smooth",
-        });
-      } catch (err) {
-        karaokeOutro.scrollIntoView(false);
-      }
-      runKaraokeOutroTyping();
-    }, 380);
-    outroTimeouts.push(showOutro);
+    if (!karaokeOutro) {
+      return;
+    }
+    karaokeOutro.hidden = false;
+    karaokeOutro.classList.add("karaoke-outro--solo");
+    try {
+      karaokeOutro.scrollIntoView({
+        block: "center",
+        behavior: prefersReducedMotionOutro() ? "auto" : "smooth",
+      });
+    } catch (err) {
+      karaokeOutro.scrollIntoView(false);
+    }
+    runKaraokeOutroTyping();
   }
 
   var endpoint =

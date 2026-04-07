@@ -231,6 +231,13 @@ main {
   text-align: center;
 }
 
+/* After last lyric: video + lyrics hidden; outro is the only focus */
+.karaoke-outro--solo {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0 2rem;
+  max-width: min(94vw, 30rem);
+}
+
 .karaoke-outro__line {
   margin: 0 0 0.65rem;
   font-family: var(--font-display);
