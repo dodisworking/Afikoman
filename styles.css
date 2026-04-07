@@ -140,6 +140,129 @@ main {
 }
 
 /* Outer wrapper; matzah-slot is the positioning context so the form stays behind the matzah */
+.karaoke-panel {
+  width: 100%;
+  max-width: min(100%, 24rem);
+  margin: 0 auto 1.25rem;
+  padding: 1rem 1rem 1.15rem;
+}
+
+.panel--reveal .karaoke-panel {
+  margin-top: 0;
+}
+
+.karaoke-video-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  aspect-ratio: 16 / 9;
+  background: #0a0a0c;
+  opacity: 1;
+  transition: opacity 1.25s ease;
+}
+
+.karaoke-video-wrap.karaoke-video-wrap--fadeout {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.karaoke-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.karaoke-lyrics {
+  margin: 1rem 0 0;
+  text-align: left;
+  max-width: min(92vw, 28rem);
+  margin-left: auto;
+  margin-right: auto;
+  max-height: min(48vh, 24rem);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge */
+  padding-right: 0;
+}
+
+.karaoke-lyrics::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.karaoke-line {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.65rem, 2.4vw, 0.78rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+}
+
+.karaoke-line:last-child {
+  margin-bottom: 0;
+}
+
+/* Whole-word "up" / "Up": bold red, each occurrence larger than the last (see inline font-size). */
+.karaoke-line .karaoke-up {
+  font-weight: 800;
+  color: #ff2a2a;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.05;
+  text-shadow: 0 0 14px rgba(255, 50, 50, 0.55);
+}
+
+/* Post-song outro (after last lyric) */
+.karaoke-outro {
+  margin: 1.35rem auto 0;
+  max-width: min(92vw, 28rem);
+  text-align: center;
+}
+
+.karaoke-outro__line {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.75rem, 2.8vw, 0.95rem);
+  letter-spacing: 0.08em;
+  text-transform: none;
+  line-height: 1.45;
+  color: var(--ink);
+  min-height: 1.35em;
+}
+
+.karaoke-outro__line--he {
+  font-family: "Noto Sans Hebrew", "Segoe UI", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 4vw, 1.45rem);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--accent-gold);
+  text-shadow: 0 0 18px var(--accent-dim);
+}
+
+.karaoke-outro__line:last-child {
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karaoke-video-wrap {
+    transition-duration: 0.01ms;
+  }
+}
+
 .afikoman-stack {
   width: 100%;
   margin: 0.75rem 0 1.5rem;

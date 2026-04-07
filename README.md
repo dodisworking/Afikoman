@@ -140,7 +140,7 @@ WEBAPP_URL="https://script.google.com/macros/s/.../exec" npm run test:sheets
 
 ## Customize
 
-- **Clue / riddle:** edit the `RIDDLE_LINES` array in `app.js`, then bump `?v=` on scripts in `index.html` so visitors get the new file (cache bust).
+- **Song video:** place an MP4 at `assets/kite-song.mp4`, or set `window.KITE_VIDEO_SRC` in `config.js`. Lyrics are plain text in `index.html` under `#karaoke-lyrics`. Bump `?v=` on scripts in `index.html` after edits (cache bust).
 - **Matzah image:** replace `assets/matzah.png`. If the file came from a stock site (e.g. watermarked previews), use a version you are licensed to publish for a public site.
 - **Server logic:** edit [`apps-script/Code.gs`](apps-script/Code.gs), then `npm run gas:push`.
 
